@@ -2,7 +2,7 @@
 # SHOW VARIABLES LIKE 'local_infile';
 # SET GLOBAL local_infile = 1;
 
-SET @batch_id := UUID();
+SET @batch_id = UUID();
 
 -- crm_cust_info
 SET @start_time = NOW();
