@@ -115,3 +115,26 @@ SELECT
 	END AS sls_price
 FROM datawarehouse_bronze.crm_sales_details;
 
+
+-- transform and load into datawarehouse_silver.erp_cust_az12
+INSERT INTO datawarehouse_silver.erp_cust_az12(
+	cid,
+    bdate,
+    gen
+)   
+SELECT
+	CASE
+		WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid, 4, LENGTH(cid))
+		ELSE cid
+	END AS cid,    
+	CASE
+		WHEN bdate > NOW() THEN NULL	-- convert future birthdates to NULL
+		ELSE bdate
+    END AS bdate, 
+	CASE 
+		WHEN UPPER(TRIM(REPLACE(gen,'\r',''))) IN ('M', 'MALE') THEN 'Male'
+        WHEN UPPER(TRIM(REPLACE(gen,'\r',''))) IN ('F', 'FEMALE') THEN 'Female'
+        ELSE 'n/a'
+    END AS gen 		-- standardize the values
+FROM datawarehouse_bronze.erp_cust_az12;
+
