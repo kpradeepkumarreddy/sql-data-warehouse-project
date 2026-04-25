@@ -44,3 +44,33 @@ FROM
 WHERE cst_id_rank = 1; 
 
 
+-- transform and load into datawarehouse_silver.crm_cust_info
+INSERT INTO datawarehouse_silver.crm_prd_info(
+	prd_id,			
+    cat_id,			
+    prd_key,
+    prd_nm,
+    prd_cost,
+    prd_line,
+    prd_start_dt,
+    prd_end_dt
+)
+SELECT 
+	prd_id,
+	REPLACE(SUBSTRING(prd_key, 1, 5),'-', '_') AS cat_id,	-- Extract category ID
+	SUBSTRING(prd_key, 7, LENGTH(prd_key)) AS prd_key,		-- Extract product key
+	prd_nm,
+	prd_cost,
+    CASE UPPER(TRIM(prd_line))
+		WHEN  'M' THEN 'Mountain'
+        WHEN  'T' THEN 'Touring'
+        WHEN  'S' THEN 'Other Sales'
+        WHEN  'R' THEN 'Road'
+        ELSE 'n/a'
+    END AS prd_line,		-- Map product line codes to descriptive values
+	DATE(prd_start_dt) AS prd_start_dt,
+	DATE(
+    	DATE_SUB(LEAD(prd_start_dt) OVER(PARTITION BY prd_key ORDER BY prd_start_dt), INTERVAL 1 DAY)
+    ) AS prd_end_dt			-- Calculate end date as one day before the next start date
+FROM datawarehouse_bronze.crm_prd_info;
+
