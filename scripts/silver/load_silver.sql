@@ -138,3 +138,20 @@ SELECT
     END AS gen 		-- standardize the values
 FROM datawarehouse_bronze.erp_cust_az12;
 
+
+-- transform and load into datawarehouse_silver.erp_loc_a101
+INSERT INTO datawarehouse_silver.erp_loc_a101(
+	cid,
+    cntry
+)
+SELECT 
+	REPLACE(cid,'-', '') AS cid, 
+	CASE
+		WHEN UPPER(TRIM(REPLACE(cntry,'\r',''))) IN ('US', 'USA') THEN 'United States'
+        WHEN TRIM(REPLACE(cntry,'\r','')) = 'DE' THEN 'Germnay'
+        WHEN cntry IS NULL OR TRIM(cntry) ='\r' THEN 'n/a'
+        ELSE TRIM(cntry)
+    END AS cntry 
+FROM datawarehouse_bronze.erp_loc_a101;
+
+
