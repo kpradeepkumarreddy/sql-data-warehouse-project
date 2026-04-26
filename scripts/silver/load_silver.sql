@@ -11,6 +11,8 @@ Script Purpose:
 ===============================================================================
 */
 
+-- transform and load into datawarehouse_silver.crm_cust_info
+TRUNCATE datawarehouse_silver.crm_cust_info;
 INSERT INTO datawarehouse_silver.crm_cust_info(
 	cst_id,
     cst_key,
@@ -44,7 +46,8 @@ FROM
 WHERE cst_id_rank = 1; 
 
 
--- transform and load into datawarehouse_silver.crm_cust_info
+-- transform and load into datawarehouse_silver.crm_prd_info
+TRUNCATE datawarehouse_silver.crm_prd_info;
 INSERT INTO datawarehouse_silver.crm_prd_info(
 	prd_id,			
     cat_id,			
@@ -70,12 +73,13 @@ SELECT
     END AS prd_line,		-- Map product line codes to descriptive values
 	DATE(prd_start_dt) AS prd_start_dt,
 	DATE(
-    	DATE_SUB(LEAD(prd_start_dt) OVER(PARTITION BY prd_key ORDER BY prd_start_dt), INTERVAL 1 DAY)
+    DATE_SUB(LEAD(prd_start_dt) OVER(PARTITION BY prd_key ORDER BY prd_start_dt), INTERVAL 1 DAY)
     ) AS prd_end_dt			-- Calculate end date as one day before the next start date
 FROM datawarehouse_bronze.crm_prd_info;
 
 
 -- transform and load into datawarehouse_silver.crm_sales_details
+TRUNCATE datawarehouse_silver.crm_sales_details;
 INSERT INTO  datawarehouse_silver.crm_sales_details(
 	sls_ord_num,
 	sls_prd_key,
@@ -117,6 +121,7 @@ FROM datawarehouse_bronze.crm_sales_details;
 
 
 -- transform and load into datawarehouse_silver.erp_cust_az12
+TRUNCATE datawarehouse_silver.erp_cust_az12;
 INSERT INTO datawarehouse_silver.erp_cust_az12(
 	cid,
     bdate,
@@ -137,9 +142,10 @@ SELECT
         ELSE 'n/a'
     END AS gen 		-- standardize the values
 FROM datawarehouse_bronze.erp_cust_az12;
-
-
+            
+            
 -- transform and load into datawarehouse_silver.erp_loc_a101
+TRUNCATE datawarehouse_silver.erp_loc_a101;
 INSERT INTO datawarehouse_silver.erp_loc_a101(
 	cid,
     cntry
@@ -156,6 +162,7 @@ FROM datawarehouse_bronze.erp_loc_a101;
 
 
 -- transform and load into datawarehouse_silver.erp_px_cat_g1v2
+TRUNCATE datawarehouse_silver.erp_px_cat_g1v2;
 INSERT INTO datawarehouse_silver.erp_px_cat_g1v2(
 	id,
     cat,
@@ -167,5 +174,3 @@ SELECT id,
         subcat,
         REPLACE(maintenance, '\r', '') AS maintenance
 FROM datawarehouse_bronze.erp_px_cat_g1v2;
-
-
