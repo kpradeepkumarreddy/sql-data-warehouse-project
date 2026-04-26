@@ -155,3 +155,17 @@ SELECT
 FROM datawarehouse_bronze.erp_loc_a101;
 
 
+-- transform and load into datawarehouse_silver.erp_px_cat_g1v2
+INSERT INTO datawarehouse_silver.erp_px_cat_g1v2(
+	id,
+    cat,
+    subcat,
+	maintenance
+)
+SELECT id,
+		cat,
+        subcat,
+        REPLACE(maintenance, '\r', '') AS maintenance
+FROM datawarehouse_bronze.erp_px_cat_g1v2;
+
+
