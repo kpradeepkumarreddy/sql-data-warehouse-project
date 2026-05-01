@@ -11,10 +11,17 @@ WARNING:
     and ensure you have proper backups before running this script.
 */
 
-CREATE DATABASE IF NOT EXISTS datawarehouse_bronze;
-CREATE DATABASE IF NOT EXISTS datawarehouse_silver;
-CREATE DATABASE IF NOT EXISTS datawarehouse_gold;
-CREATE DATABASE IF NOT EXISTS datawarehouse_logs;
+DROP DATABASE IF EXISTS datawarehouse_bronze;
+CREATE DATABASE datawarehouse_bronze;
+
+DROP DATABASE IF EXISTS datawarehouse_silver;
+CREATE DATABASE datawarehouse_silver;
+
+DROP DATABASE IF EXISTS datawarehouse_gold;
+CREATE DATABASE datawarehouse_gold;
+
+DROP DATABASE IF EXISTS datawarehouse_logs;
+CREATE DATABASE datawarehouse_logs;
 
 
 
