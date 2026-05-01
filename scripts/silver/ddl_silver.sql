@@ -25,8 +25,9 @@ CREATE TABLE crm_cust_info (
 
 DROP TABLE IF EXISTS crm_prd_info;
 CREATE TABLE crm_prd_info (
-    prd_id       INT,
-    prd_key      VARCHAR(50),
+    prd_id		INT,
+    cat_id		VARCHAR(50),
+    prd_key		VARCHAR(50),
     prd_nm       VARCHAR(50),
     prd_cost     INT,
     prd_line     VARCHAR(50),
