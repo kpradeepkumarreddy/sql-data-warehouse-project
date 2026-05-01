@@ -156,7 +156,7 @@ SELECT
 		WHEN UPPER(TRIM(REPLACE(cntry,'\r',''))) IN ('US', 'USA') THEN 'United States'
         WHEN TRIM(REPLACE(cntry,'\r','')) = 'DE' THEN 'Germany'
         WHEN cntry IS NULL OR TRIM(cntry) ='\r' THEN 'n/a'
-        ELSE TRIM(cntry)
+        ELSE TRIM(REPLACE(cntry,'\r',''))
     END AS cntry 
 FROM datawarehouse_bronze.erp_loc_a101;
 
