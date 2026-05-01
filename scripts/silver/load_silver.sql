@@ -154,7 +154,7 @@ SELECT
 	REPLACE(cid,'-', '') AS cid, 
 	CASE
 		WHEN UPPER(TRIM(REPLACE(cntry,'\r',''))) IN ('US', 'USA') THEN 'United States'
-        WHEN TRIM(REPLACE(cntry,'\r','')) = 'DE' THEN 'Germnay'
+        WHEN TRIM(REPLACE(cntry,'\r','')) = 'DE' THEN 'Germany'
         WHEN cntry IS NULL OR TRIM(cntry) ='\r' THEN 'n/a'
         ELSE TRIM(cntry)
     END AS cntry 
